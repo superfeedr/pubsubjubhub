@@ -91,10 +91,10 @@ class MainHandler(webapp.RequestHandler):
       headers = {"Authorization": "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1] }
     
     if hub is None :
-      return '{"code":"%s","body":"%s"}' % ("500", "This feed (is this actually a feed?) doesn't have a hub; If it's a feed, try using http://superfeedr.com")
+      return '{"code": "%s","body": "%s"}' % ("500", "This feed (is this actually a feed?) doesn't have a hub; If it's a feed, try using http://superfeedr.com")
     else :
      result = urlfetch.fetch(url=hub, payload=urllib.urlencode(form_fields), method=urlfetch.POST, headers = headers)
-     return '{"code":"%s","body":"%s"}' % (result.status_code, result.content)
+     return '{"code": "%s","body": "%s"}' % (result.status_code, result.content)
     
     
   def get(self):
@@ -105,7 +105,7 @@ class MainHandler(webapp.RequestHandler):
         # Then, perform the subscription to the hub!
         result = self.subscribe(hub=hub_url, topic=self.request.get("hub.topic"), callback=self.request.get("hub.callback"), mode=self.request.get("hub.mode"), verify=self.request.get("hub.verify"), lease_seconds=self.request.get("hub.lease_seconds"), secret=self.request.get("hub.secret"), verify_token=self.request.get("hub.verify_token"), login=self.request.get("superfeedr.login"), password=self.request.get("superfeedr.password"))
       except:
-        result = '{"code":"500", "Not a feed!"}'
+        result = '{"code": "500","body": "Not a feed!"}'
 
       if self.request.get("callback"):
         self.response.out.write(self.request.get("callback") + "(" + result + ")")
