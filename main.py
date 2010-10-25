@@ -68,12 +68,14 @@ class MainHandler(webapp.RequestHandler):
 
   def subscribe(self, hub, topic, callback, mode="subscribe", verify="sync", lease_seconds=7776000, secret=None, verify_token="", login=None, password=None):
     form_fields = {
-      "hub.mode": mode,
       "hub.topic": topic,
       "hub.callback": callback,
       "hub.verify": verify,
       "hub.lease_seconds": lease_seconds
     }
+    if mode is None or mode == "":
+      form_fields['hub.mode'] = "subscribe"
+    
     if secret is not None and secret != "" :
       form_fields['hub.secret'] = secret
 
