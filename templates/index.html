@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>PubSubJubhub</title>
+    <meta name="author" content="Julien Genestoux">
+</head>
+<body style="background-color:#333; color: white; font-family:helvetica; padding: 0px 10% 0px 10%; font-size:1.1em">
+    <h1 style="color:#FF0080; font-size: 3.0em;">PubSub<span style="color: #FF8000;">J</span>ubhub</h1>
+    <p>
+        A little web service that allows you to subscribe to PubSubHubbub feeds from Javascript!
+    </p>
+    <h2>Query:</h2>
+    <p><code>GET http://pubsubhubbub.appspot.com/?<br />
+        &nbsp;hub.url=http://blog.superfeedr.com&<br />
+        &nbsp;hub.callback=http://myapp.com/push/123&<br />
+        &nbsp;hub.mode=subscribe</code></p>
+    
+    <p>Of course, you can also specify a <code>hub.verify</code>, a <code>hub.lease_seconds</code>, a <code>hub.secret</code>, a <code>hub.verify_token</code>...</p>
+    
+    <p>And for all these feeds which do not have a designated hub, you can as well specify your <code>superfeedr.login</code> and <code>superfeedr.password</code> if you have a <a href="http://superfeedr.com/subscriber">Superfeedr</a> account.</p>
+    
+    <small>Finally, You can as well add a <em>callback</em> parameter.</small>
+    
+    <h2>Response:</h2>
+    <p><code>{"code":"200", "All Good!"}</code></p>
+    <span style="font-size:0.6em;position:absolute; bottom:0; margin:0px 0px 20px 0px; padding:0px;">
+        Brought to you by <a href="http://superfeedr.com" style="color:#CCC" >Superfeedr</a>&nbsp;<img src="http://www.gravatar.com/avatar/a2f7d4dd6df7dd59e4adab811c00a3a1?s=24" style="vertical-align:middle;"> |
+    <a href="http://blog.superfeedr.com/api/discovery/feediscovery/feeds/feediscovery/" style="color:#CCC">Learn more</a> | <a href="http://github.com/superfeedr/feediscovery"  style="color:#CCC;">Make it better!</a>
+    </span>
+</body>
+</html>
