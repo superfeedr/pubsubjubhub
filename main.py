@@ -70,11 +70,13 @@ class MainHandler(webapp.RequestHandler):
     form_fields = {
       "hub.topic": topic,
       "hub.callback": callback,
-      "hub.verify": verify,
       "hub.lease_seconds": lease_seconds
     }
     if mode is None or mode == "":
       form_fields['hub.mode'] = "subscribe"
+
+    if verify is None or verify == "":
+      form_fields['hub.verify'] = "sync"
     
     if secret is not None and secret != "" :
       form_fields['hub.secret'] = secret
