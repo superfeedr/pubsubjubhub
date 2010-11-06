@@ -66,7 +66,7 @@ class MainHandler(webapp.RequestHandler):
       except:
         raise Exception("NotAFeed")
 
-  def subscribe(self, hub, topic, callback, mode="subscribe", verify="sync", lease_seconds=7776000, secret=None, verify_token="", login=None, password=None):
+  def subscribe(self, hub, topic, callback, mode="subscribe", verify="sync", lease_seconds=7776000, secret=None, verify_token="", login=None, password=None, headers={}):
     form_fields = {
       "hub.topic": topic,
       "hub.callback": callback,
@@ -74,19 +74,21 @@ class MainHandler(webapp.RequestHandler):
     }
     if mode is None or mode == "":
       form_fields['hub.mode'] = "subscribe"
+    else :
+      form_fields['hub.mode'] = mode
 
     if verify is None or verify == "":
       form_fields['hub.verify'] = "sync"
-    
+    else :
+      form_fields['hub.verify'] = verify
+      
     if secret is not None and secret != "" :
       form_fields['hub.secret'] = secret
 
     if verify_token is not None and verify_token != "" :
       form_fields['hub.verify_token'] = verify_token
     
-    headers= {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
+    headers['Content-Type'] = 'application/x-www-form-urlencoded'
     
     if login is not None and login is not "" :
       hub = "http://superfeedr.com/hubbub"
@@ -117,7 +119,7 @@ class MainHandler(webapp.RequestHandler):
       if hub_url is None :
         result = '{"code": "500", "body": "Not a feed!"}'
       else:
-        result = self.subscribe(hub=hub_url, topic=self.request.get("hub.topic"), callback=self.request.get("hub.callback"), mode=self.request.get("hub.mode"), verify=self.request.get("hub.verify"), lease_seconds=self.request.get("hub.lease_seconds"), secret=self.request.get("hub.secret"), verify_token=self.request.get("hub.verify_token"), login=self.request.get("superfeedr.login"), password=self.request.get("superfeedr.password"))
+        result = self.subscribe(hub=hub_url, topic=self.request.get("hub.topic"), callback=self.request.get("hub.callback"), mode=self.request.get("hub.mode"), verify=self.request.get("hub.verify"), lease_seconds=self.request.get("hub.lease_seconds"), secret=self.request.get("hub.secret"), verify_token=self.request.get("hub.verify_token"), login=self.request.get("superfeedr.login"), password=self.request.get("superfeedr.password"), headers=self.request.headers)
 
       if self.request.get("callback"):
         self.response.out.write(self.request.get("callback") + "(" + result + ")")
