@@ -66,7 +66,7 @@ class MainHandler(webapp.RequestHandler):
       except:
         raise Exception("NotAFeed")
 
-  def subscribe(self, hub, topic, callback, mode="subscribe", verify="sync", lease_seconds=7776000, secret=None, verify_token="", login=None, password=None, headers={}):
+  def subscribe(self, hub, topic, callback, mode="subscribe", verify="sync", lease_seconds=7776000, secret=None, verify_token="", login=None, password=None, format=None, headers={}):
     form_fields = {
       "hub.topic": topic,
       "hub.callback": callback,
@@ -87,6 +87,9 @@ class MainHandler(webapp.RequestHandler):
 
     if verify_token is not None and verify_token != "" :
       form_fields['hub.verify_token'] = verify_token
+    
+    if format == "json" :
+      headers['Accept'] = 'application/json'
     
     headers['Content-Type'] = 'application/x-www-form-urlencoded'
     
@@ -119,7 +122,7 @@ class MainHandler(webapp.RequestHandler):
       if hub_url is None :
         result = '{"code": "500", "body": "Not a feed!"}'
       else:
-        result = self.subscribe(hub=hub_url, topic=self.request.get("hub.topic"), callback=self.request.get("hub.callback"), mode=self.request.get("hub.mode"), verify=self.request.get("hub.verify"), lease_seconds=self.request.get("hub.lease_seconds"), secret=self.request.get("hub.secret"), verify_token=self.request.get("hub.verify_token"), login=self.request.get("superfeedr.login"), password=self.request.get("superfeedr.password"), headers=self.request.headers)
+        result = self.subscribe(hub=hub_url, topic=self.request.get("hub.topic"), callback=self.request.get("hub.callback"), mode=self.request.get("hub.mode"), verify=self.request.get("hub.verify"), lease_seconds=self.request.get("hub.lease_seconds"), secret=self.request.get("hub.secret"), verify_token=self.request.get("hub.verify_token"), login=self.request.get("superfeedr.login"), password=self.request.get("superfeedr.password"), format=self.request.get("superfeedr.format"), headers=self.request.headers)
 
       if self.request.get("callback"):
         self.response.out.write(self.request.get("callback") + "(" + result + ")")
