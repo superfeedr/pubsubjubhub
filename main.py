@@ -33,7 +33,7 @@ import feedparser
 
 ##
 # This app performs PubSubHubbub subscriptions in javascript.
-# It must be called with a GET request (GET subscription, mostly to avoid SOP)  
+# It must be called with a GET request (GET subscription, mostly to avoid SOP)
 # You just need to provide :
 # - hub.callback REQUIRED. The subscriber's callback URL where notifications should be delivered.
 # - hub.mode REQUIRED. The literal string "subscribe" or "unsubscribe", depending on the goal of the request.
@@ -46,7 +46,7 @@ import feedparser
 # - superfeedr.password OPTIONAL. Used if no hub was found
 
 class MainHandler(webapp.RequestHandler):
-  
+
   def extract_hub(self, url):
     hub = memcache.get(url)
     if hub is not None:
@@ -81,44 +81,44 @@ class MainHandler(webapp.RequestHandler):
       form_fields['hub.verify'] = "sync"
     else :
       form_fields['hub.verify'] = verify
-      
+
     if secret is not None and secret != "" :
       form_fields['hub.secret'] = secret
 
     if verify_token is not None and verify_token != "" :
       form_fields['hub.verify_token'] = verify_token
-    
+
     if format == "json" :
       headers['Accept'] = 'application/json'
-    
+
     headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    
+
     if login is not None and login is not "" :
       hub = "http://superfeedr.com/hubbub"
-      headers["Authorization"] = "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1] 
-    
+      headers["Authorization"] = "Basic %s" % base64.encodestring('%s:%s' % (login, password))[:-1]
+
     if hub is None :
       return '{"code": "%s", "body": "%s"}' % ("500", "This feed (is this actually a feed?) doesn't have a hub; If it's a feed, try using http://superfeedr.com")
     else :
      result = urlfetch.fetch(url=hub, payload=urllib.urlencode(form_fields), method=urlfetch.POST, headers = headers)
      return '{"code": "%s", "body": "%s"}' % (result.status_code, result.content.rstrip())
-    
-    
+
+
   def get(self):
     # First thing first : extract the hub url!
     if self.request.get("hub.topic") :
       hub_url = None;
-      
+
       if self.request.get("hub.url") :
         hub_url = self.request.get("hub.url")
       else :
         try :
           hub_url = self.extract_hub(url=self.request.get("hub.topic"))
-        except : 
+        except :
           hub_url = None
-      
+
       result = None
-      
+
       if hub_url is None :
         result = '{"code": "500", "body": "Not a feed!"}'
       else:
@@ -132,8 +132,8 @@ class MainHandler(webapp.RequestHandler):
       self.response.out.write(template.render(os.path.join(os.path.dirname(__file__), 'templates', "index.html"), {}))
 
 def main():
-  logging.getLogger().setLevel(logging.INFO) 
-  
+  logging.getLogger().setLevel(logging.INFO)
+
   application = webapp.WSGIApplication([('/', MainHandler)],
                                          debug=True)
   util.run_wsgi_app(application)
